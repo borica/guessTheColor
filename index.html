@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>Guess the Color!</title>
+    <meta charset="utf-8">
+      <!--Sets instructions for the browser regarding resposiveness of devices-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!--Sets the bootstrap css dependency-->
+    <link rel="stylesheet"href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css">
+    <style>
+        /* body default background color */
+        body{
+            background-color: #f4f4f4;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23dbdbdb' fill-opacity='0.36' fill-rule='evenodd'/%3E%3C/svg%3E");
+        }
+        /* Style for the color tiles at the bottom */
+        .colorTile{
+            width: 40px;
+            height: 25px;
+            background-color: orange;
+            border-radius: 5px;
+        }
+        /* Sets whichever tag not to display */
+        .display{
+            display: none;
+        }
+        /* Sets the font color to red */
+        .text-color{
+            color:red !important;
+        }
+        /* Sets a fraction of 5 outta 100 of the viewport height */
+        .margin{
+            margin-top:5vh;
+        }
+    </style>
+  </head>
+  <body onload="main()">
+    <div class="container">
+        <div class="margin card text-center">
+            <div id="currentColor" style="color: rgba(255, 255, 255, 0)" class="card-header">
+                Current color: 
+            </div>
+            <div class="card-body">
+                <!--Notification Area-->
+                <div id="notificationArea">
+                    <div id="alertError" class="alert alert-danger display" role="alert">
+                    </div>
+                     <div id="alertSuccess" class="alert alert-success display" role="alert">
+                    </div>
+                </div>
+                <!--Card middle body-->
+                <h4 class="card-title">Color Guess</h4>
+                <p class="card-text">The purpose of this little game is to make you guess what color this machine is thinking right now, so make your best guess!</p>
+                        <div class="form-group">
+                            <label id="labelColor" for="colorInput">Whats the color ?</label>
+                            <input type="text" class="form-control" id="colorInput">
+                            <small id="colorHelp" class="form-text text-muted">If you miss this, you die. Or not..</small>
+                        </div>
+                <a href="#" onclick="magic()" id="btn-guess" class="btn btn-primary">Guess</a>
+                <a href="#" onclick="location.reload()" id="btn-playAgain" class="btn btn-primary display">Play again ?</a>
+            </div>
+            <!--Card bottom section-->
+            <div class="card-footer text-muted">
+                <p>Available colors</p>
+                <!--Tiles Section-->
+                <div id="colorTilesHolder" class="row">
+                    <div class="col-md-2" style="border-radius: 5px 0 0 5px;"><div class=" colorTile"></div></div>
+                    <div class="col-md-2"><div class=" colorTile"></div></div>
+                    <div class="col-md-2"><div class=" colorTile"></div></div>
+                    <div class="col-md-2"><div class=" colorTile"></div></div>
+                    <div class="col-md-2"><div class=" colorTile"></div></div>
+                    <div class="col-md-2" style="border-radius: 0 5px 5px 0;"><div class=" colorTile"></div></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--Bootstrap dependencies-->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js"></script>
+        <script>
+            function main(){
+                //array of available colors
+                colors = [
+                    "Blue",
+                    "Yellow",
+                    "Green",
+                    "Orange",
+                    "Red",
+                    "Black"
+                ];
+                //array of colors to set in the background dynamically
+                bgColors = [
+                    "#3D8EB9",
+                    "#EEE657",
+                    "#71BA51",
+                    "#EE543A",
+                    "#E01931",
+                    "#282830"
+                ];
+                //array of colors contrast with the background colors in the bottom tiles
+                shadiness = [
+                    "white",
+                    "black",
+                    "black",
+                    "black",
+                    "white",
+                    "white"
+                ]
+                //Sets the random number for the color the player will try to guess
+                color = randomizer(0,5);
+                //Sets the color into the header for debugging or easter egg purposes
+                document.getElementById('currentColor').innerHTML +=  colors[color];
+                //Sets the array of tiles at the bottom
+                var elements = document.getElementById('colorTilesHolder').children;
+                //Sets an array to be iterated in the for loop
+                var bgStorage = [];
+                //Loops the amount of tiles to give them random backgrounds
+                for(var i = 0; i < elements.length; i++){
+                    //Randomized background
+                    var randomBg = randomizer(0,5); 
+                    //Storing the background to compare and avoid get a repeated one
+                    bgStorage[i] = randomBg;
+                    //Verifies if the current background in the loop has already been set
+                    function isRepeated(){
+                        for(var j = 0; j < bgStorage.length; j++){
+                            if(randomBg === bgStorage[j - 1] && j > 0){
+                                var isRepeated = true;
+                            }
+                        }
+                        if(isRepeated){
+                           return true;
+                        }
+                    }
+                    //If is not repeated, sets the tile's background
+                    if(!isRepeated()){
+                       elements[i].style.backgroundColor = bgColors[randomBg];
+                       elements[i].innerHTML =  colors[randomBg];
+                       elements[i].style.color = shadiness[randomBg];
+                    }else{
+                        /* if repeated decrease the iterator to overwrite the background with a not 
+                         repeated one */
+                        i--
+                    }
+                }
+            }
+            //Function capable of caculing a random number given a range
+            function randomizer(min, max){
+                return Math.round(Math.random() * (max - min) + min);
+            }
+            //Sets the number of guesses the player will take to guess the color
+            var numberGuess = 0;
+            //Triggered by the "Guess" button, this function will do all the action
+            function magic() {
+                var answer = document.getElementById('colorInput').value;
+                //Verifies if the string of inputed is empty
+                if(answer != ""){
+                    //Verifies if the string of inputed data equals the color to guess
+                    if(answer.toLowerCase() === colors[color].toLowerCase()){
+                        numberGuess = numberGuess + 1;
+                        if(numberGuess <= 1){
+                            //Sets a congratulation message if the user took only one try to guess the color
+                            document.getElementById('alertSuccess').innerHTML =  "Congrats! You did it in the fist try, you're amazing!";
+                        }else{
+                            //Sets a congratulation if the user has guessed a color in more tries
+                            document.getElementById('alertSuccess').innerHTML =  "Yay, you did it! There's room for improvement tho... It took you " + numberGuess + " guesses.";
+                        }
+                        //Sets off the Error message and on the success message
+                        document.getElementById('alertError').classList.add("display");
+                        document.getElementById('alertSuccess').classList.remove("display");
+                        
+                        //Enables the "Play Again" button with refresh action
+                        document.getElementById('btn-playAgain').classList.remove("display");
+                        //Disables the "Guess" button if the color has been guessed
+                        document.getElementById('btn-guess').classList.add("disabled");
+                        
+                        //Refreshes the message below the input text
+                        document.getElementById('colorHelp').classList.remove("text-color");
+                        document.getElementById('colorHelp').innerHTML = ("Ok, forget what i said, you can live.");
+                        
+                        //Sets the background with the guesses color
+                        if(colors[color] == 'Blue'){
+                            document.getElementsByTagName('body')[0].style.backgroundColor = "#addbf4"; 
+                            document.getElementsByTagName('body')[0].style.backgroundImage = "data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%233d8eb9' fill-opacity='0.36' fill-rule='evenodd'/%3E%3C/svg%3E"; 
+                        }
+                        if(colors[color] == 'Red'){
+                            document.getElementsByTagName('body')[0].style.backgroundColor = '#fddbdf';
+                            document.getElementsByTagName('body')[0].style.backgroundImage = "data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23e01931' fill-opacity='0.36' fill-rule='evenodd'/%3E%3C/svg%3E";
+                        }
+                        if(colors[color] == 'Green'){
+                            document.getElementsByTagName('body')[0].style.backgroundColor = '#d4f9c3';
+                            document.getElementsByTagName('body')[0].style.backgroundImage = "data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%2371ba51' fill-opacity='0.36' fill-rule='evenodd'/%3E%3C/svg%3E";
+                        }
+                        if(colors[color] == 'Orange'){
+                           document.getElementsByTagName('body')[0].style.backgroundColor = '#ffe5c8';
+                           document.getElementsByTagName('body')[0].style.backgroundImage = "data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23ffa643' fill-opacity='0.36' fill-rule='evenodd'/%3E%3C/svg%3E";
+                        }
+                        if(colors[color] == 'Black'){
+                           document.getElementsByTagName('body')[0].style.backgroundColor = '#3c3c3c';
+                           document.getElementsByTagName('body')[0].style.backgroundImage = "data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23282830' fill-opacity='0.36' fill-rule='evenodd'/%3E%3C/svg%3E";
+                        }
+                        if(colors[color] == 'Yellow'){
+                           document.getElementsByTagName('body')[0].style.backgroundColor = '#f2f1d8';
+                           document.getElementsByTagName('body')[0].style.backgroundImage = "data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23c9be00' fill-opacity='0.36' fill-rule='evenodd'/%3E%3C/svg%3E";
+                        }
+                        
+                    }
+                    //Verifies if the inputed string of data is different from the string of color to guess
+                    else if(answer.toLowerCase() !== colors[color].toLowerCase()){
+                        //Increase the number of guesses counter
+                        numberGuess = numberGuess + 1;
+                        //Sets messages to missed guesses
+                        document.getElementById('colorHelp').innerHTML = ("You should be dead but i'll give you another try");
+                        document.getElementById('alertError').innerHTML =  "You answer is alphabetically smaller than the color.";
+                        document.getElementById('alertSuccess').classList.add("display");
+                        //Sets hints for the user to make it relatively easier to guess the color
+                        if(answer.toLowerCase() > colors[color].toLowerCase()){
+                            document.getElementById('alertError').innerHTML =  "You answer is alphabetically bigger than the color.";   
+                        }else{
+                            document.getElementById('alertError').innerHTML =  "You answer is alphabetically smaller than the color.";
+                        }
+                        //Sets the error message
+                        document.getElementById('alertError').classList.remove("display");
+                    }
+                }else{
+                    //Sets a message if the user hasn't typed anything at all
+                    document.getElementById('colorHelp').classList.add("text-color");
+                    document.getElementById('colorHelp').innerHTML = ("You're not even trying!");
+                }
+                
+            }
+        </script>
+  </body>
+</html>
